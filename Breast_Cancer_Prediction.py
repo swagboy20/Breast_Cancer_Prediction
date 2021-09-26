@@ -20,28 +20,15 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import GridSearchCV
 from sklearn.svm import SVC
+from matplotlib import cm as cm
 import time
-
-
-# In[53]:
-
 
 df = pd.read_csv("data.csv" , index_col=False)
 print(df.head(5))
 
 
-# In[54]:
-
-
 del df['Unnamed: 32']
 df['diagnosis'] = df['diagnosis'].apply(lambda x : '1' if x == 'M' else '0')
-print(df.shape)
-
-
-# In[60]:
-
-
-from matplotlib import cm as cm
 
 fig = plt.figure()
 ax1 = fig.add_subplot(111)
