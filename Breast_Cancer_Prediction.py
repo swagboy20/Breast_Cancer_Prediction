@@ -21,6 +21,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import GridSearchCV
 from sklearn.svm import SVC
 from matplotlib import cm as cm
+import warnings
 import time
 
 df = pd.read_csv("data.csv" , index_col=False)
@@ -38,27 +39,16 @@ plt.title('Correlation Between Breast Cancer Attributes')
 plt.show()
 
 
-# In[61]:
-
-
 Y = df['diagnosis'].values
 X = df.drop(['diagnosis'] , axis = 1).values
 
-X_train , X_test , Y_train , Y_test  = train_test_split(X , Y , test_size = 0.2, random_state = 15)
-
-
-# In[62]:
-
+X_train , X_test , Y_train , Y_test  = train_test_split(X , Y , test_size = 0.2, random_state = 42)
 
 models_list = []
 models_list.append(('CART', DecisionTreeClassifier()))
 models_list.append(('SVM' , SVC()))
 models_list.append(('NB' , GaussianNB()))
 models_list.append(('KNN' , KNeighborsClassifier()))
-
-
-# In[74]:
-
 
 num_folds = 20
 results = []
@@ -71,13 +61,7 @@ for name , model in models_list:
     end = time.time()
     results.append(cv_results)
     names.append(name)
-    print("%s: %f (%f) (run time: %f)" %(name, cv_results.mean(), cv_results.std(), end-start))
-
-
-# In[83]:
-
-
-import warnings 
+    print("%s: %f (%f) (run time: %f)" %(name, cv_results.mean(), cv_results.std(), end-start)) 
 
 pipelines = []
 
@@ -103,19 +87,12 @@ with warnings.catch_warnings():
         print("%s: %f (%f) (run time: %f)" % (name , cv_results.mean() , cv_results.std() , end-start))
 
 
-# In[77]:
-
-
 fig = plt.figure()
 fig.suptitle('Performance Comparison')
 ax = fig.add_subplot(111)
 plt.boxplot(results)
 ax.set_xticklabels(names)
 plt.show()
-
-
-# In[78]:
-
 
 scaler = StandardScaler().fit(X_train)
 rescaledX = scaler.transform(X_train)
@@ -133,10 +110,6 @@ params = grid_result.cv_results_['params']
 for mean, stdev, param in zip(means, stds, params):
     print("%f (%f) with: %r" % (mean, stdev, param))
 
-
-# In[79]:
-
-
 with warnings.catch_warnings():
     warnings.simplefilter("ignore")
     scaler = StandardScaler().fit(X_train)
@@ -147,10 +120,6 @@ model.fit(X_train_scaled, Y_train)
 end = time.time()
 print( "Run Time: %f" % (end-start))
 
-
-# In[80]:
-
-
 # estimate accuracy on test dataset
 with warnings.catch_warnings():
     warnings.simplefilter("ignore")
@@ -158,14 +127,8 @@ with warnings.catch_warnings():
 predictions = model.predict(X_test_scaled)
 
 
-# In[81]:
-
-
 print("Accuracy score %f" % accuracy_score(Y_test, predictions))
 print(classification_report(Y_test, predictions))
-
-
-# In[82]:
 
 
 print(confusion_matrix(Y_test, predictions))
