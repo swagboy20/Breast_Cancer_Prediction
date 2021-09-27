@@ -21,7 +21,7 @@ from matplotlib import cm as cm
 import warnings
 import time
 
-df = pd.read_csv("data.csv" , index_col=False)
+df = pd.read_csv("../data.csv" , index_col=False)
 print(df.head(5))
 
 
