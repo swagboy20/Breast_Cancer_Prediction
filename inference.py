@@ -21,9 +21,7 @@ import time
 from Breast_Cancer_Prediction.py import *
 
 def predict(df):
-  df['diagnosis'] = df['diagnosis'].apply(lambda x : '1' if x == 'M' else '0')
-  Y = df['diagnosis'].values
-  X = df.drop(['diagnosis'] , axis = 1).values
+  X = df
   with warnings.catch_warnings():
     warnings.simplefilter("ignore")
     X_scaled = scaler.transform(X)
